@@ -5,7 +5,7 @@
 //const int AirValue = 620;   //you need to replace this value with Value_1
 //const int WaterValue = 310;  //you need to replace this value with Value_2
 
-const int moistureSensor = 14; // Moisture sensor pin A0
+const int moistureSensor = A1; // Moisture sensor pin A0
 const int waterPump = 3; // Moisture sensor pin 3 (pwm)
 
 int aux = 0;
