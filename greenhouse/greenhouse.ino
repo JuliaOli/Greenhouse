@@ -141,7 +141,7 @@ void loop(){
 
 
   //soilMoistureValue = getPulseDuration(moistureSensor);
-  soilMoistureValue = 11;
+  soilMoistureValue = 0;
 
   lcd.clear();
   //Posiciona o cursor na coluna 3, linha 0;
@@ -152,9 +152,9 @@ void loop(){
   lcd.print("40%");
   
   if(soilMoistureValue > 10){
-    analogWrite(PINO_PWM, 255);
+    analogWrite(waterPump, 255);
     delay(5000);
-    analogWrite(PINO_PWM, 0);
+    analogWrite(waterPump, 0);
   }
   
   delay(2000);
