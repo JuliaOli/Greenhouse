@@ -9,7 +9,7 @@
 #define AMOSTRAS 10
 #define LED 9 //Define o pin do LED como 9.
 #define LDR A0 //Define o pin do LDR como A0.
-#define moistureSensor 15 //Define o pin do sensor como A1.
+#define moistureSensor A1 //Define o pin do sensor como A1.
 #define waterPump 10 // Moisture sensor pin 3 (pwm)
 
 //Pin used by LCD display
@@ -76,21 +76,22 @@ float ldrToLux(float ldr_tension){
 // Get the pulse by time from the sensor
 double getPulseDuration(int pin){
   pulse = pulseIn(pin, LOW);
+  Serial.println(pulse);
   counter = counter + pulse;
   aux++;
   if(aux>1000){
     Serial.print("media ");
-    double arduinoRef =  1000/( (counter/1000));
+    double arduinoRef =  1000/((counter/1000));
     Serial.println(0.85*arduinoRef-2.55);  
     aux = 0;
     counter =0;
-    delay(1000);
+    delay(100);
   }
 }
 
 void loop(){
 
-  /******************************* LUMINOSIDADE **************************************************
+  /******************************* LUMINOSIDADE *************************************************
  
   // Obtaining data from LDR sensor
  ldrValue = samples(LDR);
@@ -123,12 +124,11 @@ void loop(){
     analogWrite(LED, 64); // Ciclo ativo de 25%
   }
   delay(3000);
+*/
 
+  /******************************* HUMIDADE DO SOLO **************************************************/
 
-  /******************************* HUMIDADE DO SOLO ***************************************************/
-
-  getPulseDuration(moistureSensor);
-  
+  soilMoisturePulse = getPulseDuration(moistureSensor);
   
   lcd.clear();
   //Posiciona o cursor na coluna 3, linha 0;
@@ -139,20 +139,6 @@ void loop(){
   lcd.print("0001");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-  delay(3000);
+  delay(1000);
 }
