@@ -108,7 +108,6 @@ void loop(){
  ldrValue = samples(LDR);
  ldrTension = (ldrValue * aRef) / 1023.0;
  lux = ldrToLux(ldrTension); //Convert to lux
- luxPercent = map(lux, 0, 3500, 0, 100);
  
  // Clear the screen
   lcd.clear();
@@ -117,22 +116,30 @@ void loop(){
   // LCD TEXT
   lcd.print("LUMINOSIDADE");
   lcd.setCursor(0, 1);
-  lcd.print(luxPercent);
-  lcd.setCursor(3, 1);
-  lcd.print("%");
- 
- 
+  lcd.print(lux);
+  
  // LED power control
- if (lux < 500)
+ if (lux > 1000)
  {
     Serial.println(lux); 
-    analogWrite(LED, 255); // Ciclo ativo de 100%
+    analogWrite(LED, 64); // Ciclo ativo de 25%
   }
    
-  else if(lux >= 500)
+  else if(lux <= 1000 && lux >= 700)
   {
     Serial.println(": Claro ");
-    analogWrite(LED, 64); // Ciclo ativo de 25%
+    analogWrite(LED, 127); // Ciclo ativo de 50%
+  }
+   else if (lux < 700 && lux >= 400)
+ {
+    Serial.println(lux); 
+    analogWrite(LED, 191); // Ciclo ativo de 100%
+  }
+   
+  else
+  {
+    Serial.println(": Claro ");
+    analogWrite(LED, 255); // Ciclo ativo de 100%
   }
   delay(2000);
 
