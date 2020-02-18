@@ -33,12 +33,8 @@ double aRef = 5;
 
 // Calibration coeficients
 // LDR
-float p1 = 46.764;
-float p2 = -468.54;
-float p3 = 1794.4;
-float p4 = -3144.1;
-float p5 = 2633.3;
-float p6 = -792.64;
+float p1 = 204.93;
+float p2 = 1.4485;
 
 // Moisture Sensor
 float p1M = 0.013453;
@@ -76,7 +72,7 @@ float samples(int ldrPin) {
 
 // Calibration function
 double ldrToLux(float ldr_tension){
-    double ldrLux = p1*pow(ldr_tension,5) + p2*pow(ldr_tension,4) + p3*pow(ldr_tension,3) + p4*pow(ldr_tension,2) + p5*ldr_tension + p6;
+    double ldrLux = p1*ldr_tension + p2;
     return abs(ldrLux);
 }
 
