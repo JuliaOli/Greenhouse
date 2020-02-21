@@ -87,9 +87,9 @@ double getPulseDuration(int pin){
   counter = counter + pulse;
   aux++;
   if(aux>1000){
-    //Serial.print("media ");
+    Serial.print("media ");
     double arduinoRef =  1000/( (counter/1000));
-    //Serial.println(0.85*arduinoRef-2.55);  
+    Serial.println(0.85*arduinoRef-2.55);  
     aux = 0;
     counter =0;
     delay(1000);
@@ -143,8 +143,18 @@ void loop(){
   /******************************* SOIL MOISTURE + WATER PUMP ***************************************************/
 
 
-  //soilMoistureValue = getPulseDuration(moistureSensor);
-  soilMoistureValue = 0;
+  soilMoistureValue = getPulseDuration(moistureSensor);
+
+  if(soilMoistureValue >= 0.9){
+    analogWrite(waterPump, 255);
+    delay(5000);
+    analogWrite(waterPump, 0);
+  }
+  else{
+    analogWrite(waterPump, 0);
+  }
+
+  soilMoisturePercent = map(soilMoistureValue,-0.56, 1.9, 0, 100);
 
   lcd.clear();
   //Posiciona o cursor na coluna 3, linha 0;
@@ -152,13 +162,7 @@ void loop(){
   //Envia o texto entre aspas para o LCD
   lcd.print("HUMIDADE");
   lcd.setCursor(0, 1);
-  lcd.print("40%");
-  
-  if(soilMoistureValue > 10){
-    analogWrite(waterPump, 255);
-    delay(5000);
-    analogWrite(waterPump, 0);
-  }
+  lcd.print(soilMoisturePercent);
   
   delay(2000);
 }
