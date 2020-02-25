@@ -7,10 +7,10 @@
 
 // Constants
 #define AMOSTRAS 10
-#define LED 9 //Define o pin do LED como 9.
-#define LDR A0 //Define o pin do LDR como A0.
-#define moistureSensor A1 //Define o pin do sensor como A1.
-#define waterPump 10 // Moisture sensor pin 3 (pwm)
+#define LED 9 //Defines LED pin as 9
+#define LDR A0 //Defines LDR sensor pin as A0
+#define moistureSensor A1 //Defines Moisture sensor pin as A1
+#define waterPump 10 // Defines waterpump pwm port as 3
 
 //Pin used by LCD display
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
@@ -70,26 +70,27 @@ float samples(int ldrPin) {
   return total / (float)AMOSTRAS;
 }
 
-// Calibration function
+// LDR sensor calibration function
 double ldrToLux(float ldr_tension){
     double ldrLux = p1*ldr_tension + p2;
     return abs(ldrLux);
 }
 
+// Moisture sensor calibration function 
 double soilMoisture(float pulse){
     double sensor = p1M*pow(pulse,4) + p2M*pow(pulse,3) + p3M*pow(pulse,2) + p4M*pulse + p5M;
     return sensor;
 }
 
-// Get the pulse by time from the sensor
+// Get the pulse by time from the moisture sensor
 double getPulseDuration(int pin){
   pulse = pulseIn(pin, LOW);
   counter = counter + pulse;
   aux++;
   if(aux>1000){
-    Serial.print("media ");
+    //Serial.print("media ");
     double arduinoRef =  1000/( (counter/1000));
-    Serial.println(0.85*arduinoRef-2.55);  
+    //Serial.println(0.85*arduinoRef-2.55);  
     aux = 0;
     counter =0;
     delay(1000);
@@ -98,7 +99,7 @@ double getPulseDuration(int pin){
 
 void loop(){
 
-  /******************************* LUMINOSIDADE **************************************************/
+  /********************************************************* LUX ********************************************************************/
  
   // Obtaining data from LDR sensor
  ldrValue = samples(LDR);
@@ -120,7 +121,6 @@ void loop(){
     Serial.println(lux); 
     analogWrite(LED, 64); // Ciclo ativo de 25%
   }
-   
   else if(lux <= 1000 && lux >= 700)
   {
     Serial.println(": Claro ");
@@ -131,7 +131,6 @@ void loop(){
     Serial.println(lux); 
     analogWrite(LED, 191); // Ciclo ativo de 100%
   }
-   
   else
   {
     Serial.println(": Claro ");
@@ -140,11 +139,12 @@ void loop(){
   delay(2000);
 
 
-  /******************************* SOIL MOISTURE + WATER PUMP ***************************************************/
+ /************************************************** MOISTURE SENSOR + WATER PUMP ****************************************************/
 
 
   soilMoistureValue = getPulseDuration(moistureSensor);
 
+  // Activate the water pump if the humidity is lower than certain value given by the sensor
   if(soilMoistureValue >= 0.9){
     analogWrite(waterPump, 255);
     delay(5000);
@@ -154,6 +154,7 @@ void loop(){
     analogWrite(waterPump, 0);
   }
 
+  // Maps the values into percentage
   soilMoisturePercent = map(soilMoistureValue,-0.56, 1.9, 0, 100);
 
   lcd.clear();
