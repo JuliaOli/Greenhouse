@@ -93,13 +93,14 @@ double getPulseDuration(int pin){
     aux = 0;
     counter =0;
     delay(1000);
+    return 0.85*arduinoRef-2.55;
   }
 }
 
 void loop(){
 
   /******************************* LUMINOSIDADE **************************************************/
- 
+ /*
   // Obtaining data from LDR sensor
  ldrValue = samples(LDR);
  ldrTension = (ldrValue * aRef) / 1023.0;
@@ -138,23 +139,23 @@ void loop(){
     analogWrite(LED, 255); // Ciclo ativo de 100%
   }
   delay(2000);
-
+*/
 
   /******************************* SOIL MOISTURE + WATER PUMP ***************************************************/
 
 
   soilMoistureValue = getPulseDuration(moistureSensor);
+  //soilMoisturePulse = soilMoisture(soilMoistureValue);
 
-  if(soilMoistureValue >= 0.9){
+  if(soilMoistureValue > 3){
     analogWrite(waterPump, 255);
-    delay(5000);
+    delay(3000);
     analogWrite(waterPump, 0);
   }
   else{
     analogWrite(waterPump, 0);
   }
-
-  soilMoisturePercent = map(soilMoistureValue,-0.56, 1.9, 0, 100);
+  soilMoisturePercent = map(soilMoistureValue,-0.96, 7, 0, 100);
 
   lcd.clear();
   //Posiciona o cursor na coluna 3, linha 0;
@@ -164,5 +165,5 @@ void loop(){
   lcd.setCursor(0, 1);
   lcd.print(soilMoisturePercent);
   
-  delay(2000);
+  //delay(2000);
 }
